@@ -1,4 +1,7 @@
+import { RouterProvider } from "react-router-dom";
+import { router } from "./Router";
+
 const App = () => {
-  return <h2>mixmaster starter</h2>;
+  return <RouterProvider router={router} />;
 };
 export default App;
