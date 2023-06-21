@@ -8,7 +8,7 @@ import {
   Newsletter,
   SinglePageError,
 } from "./pages/index";
-import { landingLoader } from "./FetchData";
+import { landingLoader } from "./pages/Landing";
 import { loader as cocktailLoader } from "./pages/Cocktail";
 
 export const paths = {
