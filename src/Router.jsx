@@ -6,7 +6,10 @@ import {
   HomeLayout,
   Landing,
   Newsletter,
+  SinglePageError,
 } from "./pages/index";
+import { landingLoader } from "./FetchData";
+import { loader as cocktailLoader } from "./pages/Cocktail";
 
 export const paths = {
   COCKTAIL: "cocktail",
@@ -20,14 +23,19 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <HomeLayout />,
+    errorElement: <Error />,
     children: [
       {
         index: true,
+        loader: landingLoader,
         element: <Landing />,
+        errorElement: <SinglePageError />,
       },
       {
-        path: paths.COCKTAIL,
+        path: `${paths.COCKTAIL}/:id`,
         element: <Cocktail />,
+        errorElement: <SinglePageError />,
+        loader: cocktailLoader,
       },
       {
         path: paths.ERROR,
