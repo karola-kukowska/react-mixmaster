@@ -10,6 +10,16 @@ import {
 } from "./pages/index";
 import { landingLoader } from "./pages/Landing";
 import { loader as cocktailLoader } from "./pages/Cocktail";
+import { QueryClient } from "@tanstack/query-core";
+
+
+export const queryClient = new QueryClient({
+defaultOptions: {
+  queries: {
+    staleTime: 1000*60*5,
+  }
+  }
+});
 
 export const paths = {
   COCKTAIL: "cocktail",
@@ -27,7 +37,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        loader: landingLoader,
+        loader: landingLoader(queryClient),
         element: <Landing />,
         errorElement: <SinglePageError />,
       },
@@ -35,7 +45,7 @@ export const router = createBrowserRouter([
         path: `${paths.COCKTAIL}/:id`,
         element: <Cocktail />,
         errorElement: <SinglePageError />,
-        loader: cocktailLoader,
+        loader: cocktailLoader(queryClient),
       },
       {
         path: paths.ERROR,

@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useLoaderData, Link, Navigate } from "react-router-dom";
 import Wrapper from "../assets/wrappers/CocktailPage";
@@ -5,30 +6,31 @@ import Wrapper from "../assets/wrappers/CocktailPage";
 const singleCocktailUrl =
   "https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=";
 
-export const loader = async ({ params }) => {
-  const data = await axios.get(`${singleCocktailUrl}${params.id}`);
 
-  return { id: params.id, data: data.data.drinks };
+const singleCocktailQuery = (id) => {
+  return {
+    queryKey: ["cocktail",id],
+    queryFn: async () => {
+      const data = await axios.get(`${singleCocktailUrl}${id}`);
+      return data.data.drinks
+    }
+  }
+}
+
+export const loader = (queryClient) => async ({ params }) => {
+  //const data = await axios.get(`${singleCocktailUrl}${params.id}`);
+  await queryClient.ensureQueryData(singleCocktailQuery(params.id))
+  return { id: params.id };
 };
 
 const Cocktail = () => {
-  const { id, data } = useLoaderData();
+  const { id } = useLoaderData();
+  const {data} = useQuery(singleCocktailQuery(id));
+
   if (!data) {
     return <Navigate to="/" />;
   }
   const singleCocktail = data[0];
-
-  // const getIngredients = () => {
-  //   let arr = [];
-  //   for (let i = 1; i <= 15; i++) {
-  //     let key = `strIngredient${i}`;
-  //     if (singleCocktail[key]) {
-  //       arr.push(singleCocktail[key]);
-  //     }
-  //   }
-  //   return arr.join(", ");
-  // };
-  // const ingredients = getIngredients();
 
   const ingredients = Object.keys(singleCocktail)
     .filter(
